@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>ObraControl · Autorización de gasto</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#162033;background:#f4f7fb}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(180deg,#eef3fb 0,#f8fafc 100%)}main{width:min(100%,560px)}.card{background:#fff;border:1px solid #dde5ef;border-radius:20px;box-shadow:0 18px 60px rgba(22,32,51,.10);padding:28px}.brand{font-size:12px;font-weight:800;letter-spacing:.08em;color:#285bd7}.title{font-size:28px;line-height:1.15;margin:14px 0 8px}.muted{color:#66748b;line-height:1.6}.status{margin-top:20px;padding:16px;border-radius:12px;background:#f6f8fc;border:1px solid #e4e9f2}.actions{display:flex;gap:12px;margin-top:22px}.btn{appearance:none;border:0;border-radius:10px;padding:14px 18px;font-weight:800;font-size:15px;cursor:pointer;flex:1}.btn:disabled{opacity:.55;cursor:not-allowed}.ok{background:#16824e;color:#fff}.bad{background:#c53c4b;color:#fff}.secondary{background:#eef2f8;color:#25334d}.hidden{display:none}.pill{display:inline-block;margin-top:10px;padding:5px 9px;border-radius:999px;background:#eef3ff;color:#285bd7;font-size:12px;font-weight:800}footer{margin-top:14px;text-align:center;color:#8792a6;font-size:12px}@media(max-width:480px){body{padding:14px}.card{padding:22px;border-radius:16px}.title{font-size:24px}.actions{flex-direction:column}}
+</style>
+</head>
+<body>
+<main>
+<section class="card" aria-live="polite">
+<div class="brand">CIM65 · OBRACONTROL</div>
+<h1 class="title" id="title">Autorización de gasto</h1>
+<p class="muted" id="message">Validando el enlace de autorización…</p>
+<div class="status" id="status">Espera un momento.</div>
+<div class="actions hidden" id="actions">
+<button class="btn secondary" id="cancel" type="button">Cancelar</button>
+<button class="btn" id="confirm" type="button">Confirmar</button>
+</div>
+<span class="pill hidden" id="folio"></span>
+</section>
+<footer>Los enlaces son personales, de un solo uso y no ejecutan pagos.</footer>
+</main>
+<script>
+(()=>{
+'use strict';
+const API='https://syhfjvhfpuvbawgexdun.supabase.co/functions/v1/obra-approval-api';
+const q=new URLSearchParams(location.search),token=q.get('token')||'',decision=q.get('decision')||'';
+const $=id=>document.getElementById(id),title=$('title'),msg=$('message'),status=$('status'),actions=$('actions'),confirm=$('confirm'),cancel=$('cancel'),folio=$('folio');
+const validToken=/^[A-Za-z0-9_-]{20,200}$/.test(token),validDecision=['accept','reject'].includes(decision);
+function showError(text){title.textContent='No se puede continuar';msg.textContent='El enlace no es válido o ya no está disponible.';status.textContent=text;actions.classList.add('hidden');}
+function renderPreview(data){title.textContent=decision==='accept'?'Aceptar solicitud':'Rechazar solicitud';msg.textContent='Revisa la información y confirma tu decisión.';status.innerHTML='Aprobador: <b>'+esc(data.approver_name||'')+'</b><br>Obra: <b>'+esc(data.project_name||'')+'</b><br>Importe: <b>'+money(data.total)+'</b>';if(data.request_folio){folio.textContent=data.request_folio;folio.classList.remove('hidden')}confirm.textContent=decision==='accept'?'Confirmar aceptación':'Confirmar rechazo';confirm.className='btn '+(decision==='accept'?'ok':'bad');actions.classList.remove('hidden')}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function money(v){try{return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(Number(v||0))}catch{return '$'+Number(v||0).toFixed(2)}}
+async function call(action){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({public_action:action,token,decision})});let d={};try{d=await r.json()}catch{}if(!r.ok||!d.ok)throw new Error(d.error||'No fue posible completar la operación.');return d}
+async function init(){if(!validToken||!validDecision)return showError('Parámetros de autorización inválidos.');try{const d=await call('preview');if(d.already_decided){title.textContent='Respuesta ya registrada';msg.textContent='Este enlace ya fue utilizado.';status.textContent=d.message||'La decisión ya está registrada.';return}renderPreview(d)}catch(e){showError(e.message)}}
+confirm.addEventListener('click',async()=>{confirm.disabled=true;cancel.disabled=true;status.textContent='Registrando tu decisión…';try{const d=await call('vote');title.textContent='Respuesta registrada';msg.textContent='Tu decisión quedó registrada correctamente.';status.textContent=d.message||'Operación completada.';actions.classList.add('hidden')}catch(e){showError(e.message)}finally{confirm.disabled=false;cancel.disabled=false}});
+cancel.addEventListener('click',()=>{title.textContent='Operación cancelada';msg.textContent='No se registró ninguna decisión.';status.textContent='Puedes cerrar esta ventana.';actions.classList.add('hidden')});
+init();
+})();
+</script>
+</body>
+</html>
