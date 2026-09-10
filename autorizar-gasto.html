@@ -28,7 +28,7 @@
 <script>
 (()=>{
 'use strict';
-const API='https://syhfjvhfpuvbawgexdun.supabase.co/functions/v1/obra-approval-api';
+const API='https://syhfjvhfpuvbawgexdun.supabase.co/functions/v1/obra-approval-public-api';
 const q=new URLSearchParams(location.search),token=q.get('token')||'',decision=q.get('decision')||'';
 const $=id=>document.getElementById(id),title=$('title'),msg=$('message'),status=$('status'),actions=$('actions'),confirm=$('confirm'),cancel=$('cancel'),folio=$('folio');
 const validToken=/^[A-Za-z0-9_-]{20,200}$/.test(token),validDecision=['accept','reject'].includes(decision);
