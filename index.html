@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0f172a">
+<title>CIM65 · Portal de Cliente de Obra</title>
+<style>
+:root{--nav:#0f172a;--nav2:#1e3a8a;--blue:#2563eb;--bg:#f3f6fb;--card:#fff;--text:#172033;--muted:#667085;--border:#e4e7ec;--green:#067647;--greenbg:#ecfdf3;--red:#b42318;--redbg:#fef3f2;--amber:#b54708;--amberbg:#fffaeb;--shadow:0 10px 30px rgba(15,23,42,.08)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}.hidden{display:none!important}button{cursor:pointer}
+.top{position:sticky;top:0;z-index:30;background:linear-gradient(120deg,var(--nav),var(--nav2));color:#fff;box-shadow:0 5px 24px rgba(15,23,42,.2)}.topin{max-width:1260px;margin:auto;padding:12px 16px;display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#60a5fa,#2563eb);font-weight:900}.brand b{display:block;font-size:15px}.brand span{display:block;font-size:10px;color:#cbd5e1}.spacer{flex:1}
+.wrap{max-width:1260px;margin:auto;padding:16px 13px 70px}.card{background:#fff;border:1px solid var(--border);border-radius:17px;box-shadow:var(--shadow);padding:15px;margin-bottom:13px}.hero{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border:0}.hero small{font-size:9px;letter-spacing:.1em;color:#bfdbfe;font-weight:900}.hero h1{font-size:22px;margin:6px 0 4px}.hero p{margin:0;color:#dbeafe;font-size:11px}.heroMeta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.heroMeta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);padding:6px 9px;border-radius:99px;font-size:10px}
+.tabs{display:flex;gap:6px;overflow:auto;padding:2px 0 10px;scrollbar-width:none}.tabs button{white-space:nowrap;border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 11px;font-weight:800;font-size:10px;color:#475467}.tabs button.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.kpi{background:#fff;border:1px solid var(--border);border-radius:13px;padding:12px}.kpi span{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;font-weight:900;letter-spacing:.03em}.kpi b{display:block;font-size:18px;margin-top:4px}.kpi small{font-size:9px;color:#98a2b3}
+.progressBox{display:grid;grid-template-columns:1fr 1fr;gap:12px}.progressItem .row{display:flex;justify-content:space-between;font-size:10px;font-weight:800;margin-bottom:6px}.track{height:10px;background:#eef2f6;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:99px}.fill.fin{background:linear-gradient(90deg,#059669,#34d399)}
+.sectionhead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.sectionhead h2{font-size:16px;margin:0}.sectionhead p{font-size:10px;color:var(--muted);margin:3px 0 0}.primary,.secondary,.danger,.warnbtn,.ghost{border:0;border-radius:9px;padding:8px 11px;font-weight:800;font-size:10px;display:inline-flex;align-items:center;justify-content:center;gap:5px}.primary{background:#2563eb;color:#fff}.secondary{background:#eef2ff;color:#1e40af}.danger{background:var(--redbg);color:var(--red)}.warnbtn{background:var(--amberbg);color:var(--amber)}.ghost{background:transparent;border:1px solid rgba(255,255,255,.25);color:#fff}
+.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:850px}th{background:#f8fafc;color:#475467;text-transform:uppercase;font-size:8px;letter-spacing:.04em;text-align:left;padding:9px}td{border-top:1px solid #eef2f6;padding:9px;font-size:10px;vertical-align:top}.num{text-align:right;font-variant-numeric:tabular-nums}
+.badge{display:inline-flex;padding:4px 7px;border-radius:99px;font-size:8px;font-weight:900;text-transform:uppercase}.ok{background:var(--greenbg);color:var(--green)}.warn{background:var(--amberbg);color:var(--amber)}.off{background:var(--redbg);color:var(--red)}.info{background:#eff6ff;color:#1d4ed8}
+.estimates,.generators,.documents,.activity{display:grid;gap:9px}.item{border:1px solid var(--border);border-radius:13px;padding:12px;background:#fff}.itemtop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.item h3{font-size:12px;margin:0}.item small{display:block;color:var(--muted);font-size:9px;margin-top:3px}.itemmeta{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}.itemmeta div{background:#f8fafc;border-radius:9px;padding:8px}.itemmeta span{display:block;font-size:8px;color:var(--muted);font-weight:800;text-transform:uppercase}.itemmeta b{font-size:10px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.photo{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}.photo img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}.photo .cap{padding:8px}.photo b{font-size:10px;display:block}.photo small{font-size:8px;color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:11px}.notice{padding:10px 11px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;font-size:10px;line-height:1.5}
+label span{display:block;font-size:9px;font-weight:900;text-transform:uppercase;color:#475467;margin-bottom:5px}input,select,textarea{width:100%;padding:9px 10px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;outline:none}input:focus,select:focus,textarea:focus{border-color:#84adff;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.modalback{position:fixed;inset:0;background:rgba(15,23,42,.74);display:none;align-items:center;justify-content:center;padding:15px;z-index:60}.modalback.show{display:flex}.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;padding:16px}.modal h2{font-size:17px;margin:0 0 4px}.modal p{font-size:10px;color:var(--muted);margin:0 0 12px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.modalactions{display:flex;justify-content:flex-end;gap:7px;margin-top:13px}
+.gate{min-height:100vh;display:grid;place-items:center;padding:20px}.gatebox{width:min(470px,100%);background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px;text-align:center}.gatebox h1{font-size:20px}.gatebox p{font-size:11px;color:var(--muted);line-height:1.5}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,18px);background:#111827;color:#fff;padding:10px 14px;border-radius:9px;font-size:10px;opacity:0;pointer-events:none;transition:.2s;z-index:90;max-width:90%}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.err{background:#991b1b}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}.itemmeta{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.wrap{padding:11px 9px 60px}.card{padding:12px}.kpis{grid-template-columns:1fr 1fr}.progressBox{grid-template-columns:1fr}.gallery{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.itemmeta{grid-template-columns:1fr 1fr}.actions button{flex:1 1 calc(50% - 5px)}.hero h1{font-size:18px}.brand span{display:none}}
+</style>
+<meta name="application-name" content="CIM65 Portal Cliente">
+</head>
+<body>
+<div id="gate" class="gate">
+  <div class="gatebox"><div class="logo" style="margin:auto;color:#fff">OC</div><h1>Portal de Cliente CIM65</h1><p id="gateMsg">Abre el enlace privado que te proporcionó el administrador de la obra.</p></div>
+</div>
+<div id="app" class="hidden">
+<header class="top"><div class="topin"><div class="logo">OC</div><div class="brand"><b>CIM65 · ObraControl</b><span>Portal de seguimiento y autorización</span></div><div class="spacer"></div><button id="reloadBtn" class="ghost">↻ Actualizar</button><button id="exitBtn" class="ghost">Salir</button></div></header>
+<main class="wrap">
+<section class="card hero"><small>PORTAL PRIVADO DEL CLIENTE</small><h1 id="projectName">Obra</h1><p id="clientLine">Cargando información…</p><div id="heroMeta" class="heroMeta"></div></section>
+<nav class="tabs" id="tabs">
+<button class="active" data-tab="resumen">Resumen</button><button data-tab="catalogo">Catálogo</button><button data-tab="actividad">Actividad</button><button data-tab="estimaciones">Estimaciones</button><button data-tab="generadores">Generadores</button><button data-tab="documentos">Documentos</button><button data-tab="evidencias">Evidencias</button>
+</nav>
+<section id="tab-resumen" class="tabpane">
+<div class="kpis" id="kpis"></div>
+<div class="card"><div class="sectionhead"><div><h2>Avance de la obra</h2><p>Avance comprobado con catálogo, ejecución y pagos registrados.</p></div></div><div class="progressBox"><div class="progressItem"><div class="row"><span>Avance físico</span><b id="physicalText">0%</b></div><div class="track"><div id="physicalBar" class="fill" style="width:0%"></div></div></div><div class="progressItem"><div class="row"><span>Avance financiero pagado</span><b id="financialText">0%</b></div><div class="track"><div id="financialBar" class="fill fin" style="width:0%"></div></div></div></div></div>
+<div class="card"><div class="notice">El cliente puede revisar y decidir sobre estimaciones, así como adjuntar estimaciones, generadores y documentos. Las decisiones no modifican cantidades ejecutadas ni marcan automáticamente una estimación como pagada.</div></div>
+</section>
+<section id="tab-catalogo" class="tabpane hidden"><div class="card"><div class="sectionhead"><div><h2>Catálogo de conceptos</h2><p>Contratado, ejecutado y pendiente.</p></div></div><div id="catalog"></div></div></section>
+<section id="tab-actividad" class="tabpane hidden"><div class="card"><div class="sectionhead"><div><h2>Actividad de campo</h2><p>Capturas reportadas desde obra.</p></div></div><div id="activity" class="activity"></div></div></section>
+<section id="tab-estimaciones" class="tabpane hidden"><div class="card"><div class="sectionhead"><div><h2>Estimaciones para revisión</h2><p>Revisa y deja constancia de tu decisión.</p></div></div><div id="estimates" class="estimates"></div></div></section>
+<section id="tab-generadores" class="tabpane hidden"><div class="card"><div class="sectionhead"><div><h2>Generadores</h2><p>Generadores reportados por el contratista/residente.</p></div></div><div id="generators" class="generators"></div></div></section>
+<section id="tab-documentos" class="tabpane hidden"><div class="card"><div class="sectionhead"><div><h2>Documentos del cliente</h2><p>Sube estimaciones, generadores firmados/revisados u otros soportes.</p></div><button id="uploadBtn" class="primary">＋ Subir documento</button></div><div id="documents" class="documents"></div></div></section>
+<section id="tab-evidencias" class="tabpane hidden"><div class="card"><div class="sectionhead"><div><h2>Evidencias fotográficas</h2><p>Fotografías registradas en campo.</p></div></div><div id="gallery" class="gallery"></div></div></section>
+</main>
+</div>
+
+<div id="decisionModal" class="modalback"><div class="modal"><h2 id="decisionTitle">Decisión de estimación</h2><p id="decisionDesc"></p><label><span>Comentario</span><textarea id="decisionComment" rows="4" maxlength="2000" placeholder="Comentario o motivo"></textarea></label><div class="modalactions"><button class="secondary" data-close="decision">Cancelar</button><button id="decisionSave" class="primary">Confirmar decisión</button></div></div></div>
+<div id="uploadModal" class="modalback"><div class="modal"><h2>Subir documento</h2><p>PDF, Excel o imagen. Máximo 10 MB.</p><form id="uploadForm"><div class="formgrid"><label><span>Tipo</span><select id="docType"><option value="estimacion">Estimación</option><option value="generador">Generador</option><option value="otro">Otro</option></select></label><label><span>Folio</span><input id="docFolio" maxlength="120" placeholder="Opcional"></label></div><label style="margin-top:9px"><span>Título</span><input id="docTitle" maxlength="180" required placeholder="Ej. Estimación 03 revisada"></label><div class="formgrid" style="margin-top:9px"><label><span>Ligar a estimación</span><select id="docEstimate"><option value="">Sin ligar</option></select></label><label><span>Ligar a generador</span><select id="docGenerator"><option value="">Sin ligar</option></select></label></div><label style="margin-top:9px"><span>Archivo</span><input id="docFile" type="file" accept=".pdf,.xlsx,.xls,.jpg,.jpeg,.png,.webp" required></label><div class="modalactions"><button type="button" class="secondary" data-close="upload">Cancelar</button><button id="uploadSave" type="submit" class="primary">Subir documento</button></div></form></div></div>
+<div id="toast" class="toast"></div>
+<script>
+const API='https://syhfjvhfpuvbawgexdun.supabase.co/functions/v1/obra-client-portal-api';
+const TOKEN_KEY='oc_client_token_v2';
+let token='',data=null,pendingDecision=null;
+const $=s=>document.querySelector(s),$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:2}).format(Number(n||0));
+const qty=n=>new Intl.NumberFormat('es-MX',{maximumFractionDigits:4}).format(Number(n||0));
+const pct=n=>Math.max(0,Math.min(100,Number(n||0))).toFixed(2)+'%';
+const date=v=>{if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?String(v):d.toLocaleString('es-MX',{dateStyle:'medium',timeStyle:'short'})};
+function toast(m,t=''){const e=$('#toast');e.textContent=m;e.className='toast show '+(t==='err'?'err':'');clearTimeout(window.__t);window.__t=setTimeout(()=>e.className='toast',3200)}
+function saveToken(v){try{sessionStorage.setItem(TOKEN_KEY,v)}catch{}}
+function getToken(){try{return sessionStorage.getItem(TOKEN_KEY)||''}catch{return ''}}
+function clearToken(){try{sessionStorage.removeItem(TOKEN_KEY)}catch{}}
+function showGate(m){$('#app').classList.add('hidden');$('#gate').classList.remove('hidden');$('#gateMsg').textContent=m||'Acceso no disponible.'}
+function showApp(){$('#gate').classList.add('hidden');$('#app').classList.remove('hidden')}
+async function api(action,extra={}){
+ const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-client-key':token},body:JSON.stringify({action,...extra})});
+ let j={};try{j=await r.json()}catch{throw new Error('Respuesta inválida del servidor.')}
+ if(!r.ok||j.ok===false){if(r.status===401||r.status===403){clearToken();token='';showGate(j.error||'Acceso no disponible.')}throw new Error(j.error||'No fue posible completar la operación.')}
+ return j;
+}
+function decisionBadge(d){if(!d)return '<span class="badge info">Pendiente de cliente</span>';const c=d.decision==='aceptada'?'ok':d.decision==='rechazada'?'off':'warn';const t=d.decision==='aceptada'?'Aceptada':d.decision==='rechazada'?'Rechazada':'Corrección solicitada';return '<span class="badge '+c+'">'+t+'</span>'}
+function render(){
+ const p=data.project||{},s=data.summary||{};
+ $('#projectName').textContent=(p.code?p.code+' · ':'')+(p.name||'Obra');
+ $('#clientLine').textContent='Cliente: '+(data.client?.name||'Cliente autorizado');
+ $('#heroMeta').innerHTML=[p.location,p.status?'Estatus: '+p.status:null,'Consulta y autorización'].filter(Boolean).map(x=>'<span>'+esc(x)+'</span>').join('');
+ const k=[
+  ['Monto contratado',money(s.catalog_total)],['Valor ejecutado',money(s.executed_amount)],['Por ejecutar',money(s.remaining_amount)],['Avance físico',pct(s.physical_progress_pct)],
+  ['Avance económico',pct(s.executed_value_pct)],['Estimado autorizado',money(s.authorized_estimates_amount)],['Estimado pagado',money(s.paid_estimates_amount)],['Financiero pagado',pct(s.financial_paid_pct)]
+ ];
+ $('#kpis').innerHTML=k.map(x=>'<div class="kpi"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join('');
+ $('#physicalText').textContent=pct(s.physical_progress_pct);$('#physicalBar').style.width=Math.min(100,Number(s.physical_progress_pct||0))+'%';
+ $('#financialText').textContent=pct(s.financial_paid_pct);$('#financialBar').style.width=Math.min(100,Number(s.financial_paid_pct||0))+'%';
+ renderCatalog();renderActivity();renderEstimates();renderGenerators();renderDocuments();renderGallery();fillUploadSelects();
+}
+function renderCatalog(){
+ const a=data.catalog||[];if(!a.length)return $('#catalog').innerHTML='<div class="empty">No hay catálogo disponible.</div>';
+ $('#catalog').innerHTML='<div class="tablewrap"><table><thead><tr><th>Folio</th><th>Concepto</th><th>Unidad</th><th class="num">Contratada</th><th class="num">Ejecutada</th><th class="num">Restante</th><th class="num">P.U.</th><th class="num">Contratado</th><th class="num">Ejecutado</th><th class="num">%</th></tr></thead><tbody>'+a.map(c=>'<tr><td><b>'+esc(c.folio)+'</b></td><td>'+esc(c.name)+'</td><td>'+esc(c.unit)+'</td><td class="num">'+qty(c.contract_quantity)+'</td><td class="num">'+qty(c.executed_quantity)+'</td><td class="num">'+qty(c.remaining_quantity)+'</td><td class="num">'+money(c.unit_price)+'</td><td class="num">'+money(c.contract_amount)+'</td><td class="num">'+money(c.executed_amount)+'</td><td class="num"><b>'+pct(c.execution_pct)+'</b></td></tr>').join('')+'</tbody></table></div>';
+}
+function renderActivity(){
+ const a=data.recent_activity||[];if(!a.length)return $('#activity').innerHTML='<div class="empty">No hay actividad de campo registrada.</div>';
+ $('#activity').innerHTML=a.map(x=>'<div class="item"><div class="itemtop"><div><h3>'+esc(x.concept_folio||'')+' '+esc(x.concept_name||x.activity||'Actividad')+'</h3><small>'+esc(x.date||'')+' · '+esc(x.front||'')+'</small></div><span class="badge info">'+esc(x.status||'Reportado')+'</span></div><div class="itemmeta"><div><span>Cantidad</span><b>'+qty(x.quantity)+' '+esc(x.unit||'')+'</b></div><div><span>Importe</span><b>'+money(x.amount)+'</b></div><div><span>Generador</span><b>'+esc(x.generator_folio||'—')+'</b></div><div><span>Actividad</span><b>'+esc(x.activity||'—')+'</b></div></div></div>').join('');
+}
+function renderEstimates(){
+ const a=data.estimates||[];if(!a.length)return $('#estimates').innerHTML='<div class="empty">No hay estimaciones registradas para revisión.</div>';
+ $('#estimates').innerHTML=a.map(e=>{const d=e.client_decision;return '<div class="item"><div class="itemtop"><div><h3>'+esc(e.folio||'Sin folio')+' · '+esc(e.name||'Estimación')+'</h3><small>'+esc(e.date||'')+' · Estatus contratista: '+esc(e.status||'—')+'</small></div>'+decisionBadge(d)+'</div><div class="itemmeta"><div><span>Importe</span><b>'+money(e.amount)+'</b></div><div><span>Cantidad</span><b>'+qty(e.quantity)+' '+esc(e.unit||'')+'</b></div><div><span>Decisión cliente</span><b>'+esc(d?.decision||'Pendiente')+'</b></div><div><span>Fecha decisión</span><b>'+esc(d?date(d.created_at):'—')+'</b></div></div>'+(d?.comment?'<div class="notice" style="margin-top:9px"><b>Comentario:</b> '+esc(d.comment)+'</div>':'')+'<div class="actions"><button class="primary" onclick="openDecision(\''+esc(e.id)+'\',\'aceptada\',\''+esc(e.folio||e.name||'Estimación')+'\')">✓ Aceptar</button><button class="warnbtn" onclick="openDecision(\''+esc(e.id)+'\',\'correccion\',\''+esc(e.folio||e.name||'Estimación')+'\')">✎ Solicitar corrección</button><button class="danger" onclick="openDecision(\''+esc(e.id)+'\',\'rechazada\',\''+esc(e.folio||e.name||'Estimación')+'\')">✕ Rechazar</button></div></div>'}).join('');
+}
+function renderGenerators(){
+ const a=data.generators||[];if(!a.length)return $('#generators').innerHTML='<div class="empty">No hay generadores con folio registrados.</div>';
+ $('#generators').innerHTML=a.map(g=>'<div class="item"><div class="itemtop"><div><h3>'+esc(g.folio)+'</h3><small>Último movimiento: '+esc(g.last_date||'—')+'</small></div><span class="badge info">'+esc(g.status||'Sin estatus')+'</span></div><div class="itemmeta"><div><span>Reportes</span><b>'+qty(g.reports)+'</b></div><div><span>Cantidad</span><b>'+qty(g.quantity)+'</b></div><div><span>Importe reportado</span><b>'+money(g.amount)+'</b></div><div><span>Residentes</span><b>'+esc((g.residents||[]).join(', ')||'—')+'</b></div></div></div>').join('');
+}
+function renderDocuments(){
+ const a=data.client_documents||[];if(!a.length)return $('#documents').innerHTML='<div class="empty">Todavía no se han subido documentos desde el portal del cliente.</div>';
+ $('#documents').innerHTML=a.map(d=>'<div class="item"><div class="itemtop"><div><h3>'+esc(d.title)+'</h3><small>'+esc(d.document_type)+' · '+esc(d.folio||'Sin folio')+' · '+date(d.created_at)+'</small></div><span class="badge info">'+esc(d.file_name)+'</span></div><div class="actions">'+(d.download_url?'<a class="secondary" href="'+esc(d.download_url)+'" target="_blank" rel="noopener">↓ Descargar</a>':'')+'</div></div>').join('');
+}
+function renderGallery(){
+ const a=data.photos||[];if(!a.length)return $('#gallery').innerHTML='<div class="empty" style="grid-column:1/-1">No hay evidencias fotográficas disponibles.</div>';
+ $('#gallery').innerHTML=a.map(p=>'<div class="photo">'+(p.url?'<a href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Evidencia"></a>':'')+'<div class="cap"><b>'+esc(p.concept_folio||p.concept_name||'Evidencia')+'</b><small>'+esc(p.report_date||'')+' · '+esc(p.kind||'Avance')+'</small>'+(p.download_url?'<div class="actions"><a class="secondary" href="'+esc(p.download_url)+'">Descargar</a></div>':'')+'</div></div>').join('');
+}
+function fillUploadSelects(){
+ $('#docEstimate').innerHTML='<option value="">Sin ligar</option>'+(data.estimates||[]).map(e=>'<option value="'+esc(e.id)+'">'+esc((e.folio||'Sin folio')+' · '+(e.name||'Estimación'))+'</option>').join('');
+ $('#docGenerator').innerHTML='<option value="">Sin ligar</option>'+(data.generators||[]).map(g=>'<option value="'+esc(g.folio)+'">'+esc(g.folio)+'</option>').join('');
+}
+async function load(){
+ try{data=await api('load');showApp();render()}catch(e){if(token)toast(e.message,'err')}
+}
+window.openDecision=(id,decision,label)=>{pendingDecision={id,decision,label};$('#decisionTitle').textContent=decision==='aceptada'?'Aceptar estimación':decision==='rechazada'?'Rechazar estimación':'Solicitar corrección';$('#decisionDesc').textContent=label;$('#decisionComment').value='';$('#decisionModal').classList.add('show')};
+async function saveDecision(){
+ if(!pendingDecision)return;const c=$('#decisionComment').value.trim();if((pendingDecision.decision==='rechazada'||pendingDecision.decision==='correccion')&&c.length<3)return toast('Agrega el motivo o corrección solicitada.','err');
+ if(!confirm('¿Confirmar esta decisión? Quedará registrada en el historial de la obra.'))return;
+ const b=$('#decisionSave');b.disabled=true;try{await api('decide_estimate',{estimate_record_id:pendingDecision.id,decision:pendingDecision.decision,comment:c});$('#decisionModal').classList.remove('show');toast('Decisión registrada.');await load()}catch(e){toast(e.message,'err')}finally{b.disabled=false}
+}
+async function fileBase64(f){return await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||'').split(',')[1]||'');r.onerror=()=>rej(new Error('No se pudo leer el archivo.'));r.readAsDataURL(f)})}
+async function uploadDocument(e){
+ e.preventDefault();const f=$('#docFile').files[0];if(!f)return toast('Selecciona un archivo.','err');if(f.size>10*1024*1024)return toast('El archivo excede 10 MB.','err');
+ const b=$('#uploadSave');b.disabled=true;b.textContent='Subiendo…';try{const base64=await fileBase64(f);await api('upload_document',{document_type:$('#docType').value,title:$('#docTitle').value.trim(),folio:$('#docFolio').value.trim(),estimate_record_id:$('#docEstimate').value||null,generator_folio:$('#docGenerator').value||null,file_name:f.name,mime_type:f.type||'application/octet-stream',base64});$('#uploadModal').classList.remove('show');$('#uploadForm').reset();toast('Documento cargado correctamente.');await load()}catch(err){toast(err.message,'err')}finally{b.disabled=false;b.textContent='Subir documento'}
+}
+$('#tabs button').forEach(b=>b.addEventListener('click',()=>{$('#tabs button').forEach(x=>x.classList.toggle('active',x===b));$('.tabpane').forEach(x=>x.classList.add('hidden'));$('#tab-'+b.dataset.tab).classList.remove('hidden')}));
+$('#reloadBtn').onclick=load;$('#exitBtn').onclick=()=>{clearToken();token='';showGate('Sesión cerrada. Abre nuevamente tu enlace privado para entrar.')};$('#decisionSave').onclick=saveDecision;$('#uploadBtn').onclick=()=>$('#uploadModal').classList.add('show');$('#uploadForm').addEventListener('submit',uploadDocument);
+$('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.dataset.close+'Modal').classList.remove('show'));$('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));document.addEventListener('keydown',e=>{if(e.key==='Escape')$('.modalback').forEach(m=>m.classList.remove('show'))});
+(function init(){const h=location.hash.replace(/^#/,'').trim();if(/^[0-9a-f]{64}$/i.test(h)){token=h;saveToken(token);history.replaceState(null,'',location.pathname)}else token=getToken();if(!/^[0-9a-f]{64}$/i.test(token)){token='';showGate('Acceso no disponible. Abre el enlace privado completo que te proporcionó CIM65.');return}load()})();
+</script>
+</body>
+</html>
