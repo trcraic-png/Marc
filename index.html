@@ -60,7 +60,7 @@ label span{display:block;font-size:9px;font-weight:900;text-transform:uppercase;
 const API='https://syhfjvhfpuvbawgexdun.supabase.co/functions/v1/obra-client-portal-api';
 const TOKEN_KEY='oc_client_token_v2';
 let token='',data=null,pendingDecision=null;
-const $=s=>document.querySelector(s),$=s=>[...document.querySelectorAll(s)];
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:2}).format(Number(n||0));
 const qty=n=>new Intl.NumberFormat('es-MX',{maximumFractionDigits:4}).format(Number(n||0));
@@ -135,9 +135,9 @@ async function uploadDocument(e){
  e.preventDefault();const f=$('#docFile').files[0];if(!f)return toast('Selecciona un archivo.','err');if(f.size>10*1024*1024)return toast('El archivo excede 10 MB.','err');
  const b=$('#uploadSave');b.disabled=true;b.textContent='Subiendo…';try{const base64=await fileBase64(f);await api('upload_document',{document_type:$('#docType').value,title:$('#docTitle').value.trim(),folio:$('#docFolio').value.trim(),estimate_record_id:$('#docEstimate').value||null,generator_folio:$('#docGenerator').value||null,file_name:f.name,mime_type:f.type||'application/octet-stream',base64});$('#uploadModal').classList.remove('show');$('#uploadForm').reset();toast('Documento cargado correctamente.');await load()}catch(err){toast(err.message,'err')}finally{b.disabled=false;b.textContent='Subir documento'}
 }
-$('#tabs button').forEach(b=>b.addEventListener('click',()=>{$('#tabs button').forEach(x=>x.classList.toggle('active',x===b));$('.tabpane').forEach(x=>x.classList.add('hidden'));$('#tab-'+b.dataset.tab).classList.remove('hidden')}));
+$$('#tabs button').forEach(b=>b.addEventListener('click',()=>{$$('#tabs button').forEach(x=>x.classList.toggle('active',x===b));$$('.tabpane').forEach(x=>x.classList.add('hidden'));$('#tab-'+b.dataset.tab).classList.remove('hidden')}));
 $('#reloadBtn').onclick=load;$('#exitBtn').onclick=()=>{clearToken();token='';showGate('Sesión cerrada. Abre nuevamente tu enlace privado para entrar.')};$('#decisionSave').onclick=saveDecision;$('#uploadBtn').onclick=()=>$('#uploadModal').classList.add('show');$('#uploadForm').addEventListener('submit',uploadDocument);
-$('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.dataset.close+'Modal').classList.remove('show'));$('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));document.addEventListener('keydown',e=>{if(e.key==='Escape')$('.modalback').forEach(m=>m.classList.remove('show'))});
+$$('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.dataset.close+'Modal').classList.remove('show'));$$('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));document.addEventListener('keydown',e=>{if(e.key==='Escape')$$('.modalback').forEach(m=>m.classList.remove('show'))});
 (function init(){const h=location.hash.replace(/^#/,'').trim();if(/^[0-9a-f]{64}$/i.test(h)){token=h;saveToken(token);history.replaceState(null,'',location.pathname)}else token=getToken();if(!/^[0-9a-f]{64}$/i.test(token)){token='';showGate('Acceso no disponible. Abre el enlace privado completo que te proporcionó CIM65.');return}load()})();
 </script>
 </body>
