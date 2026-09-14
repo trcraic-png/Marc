@@ -58,11 +58,24 @@ jobs:
         run: |
           set -euo pipefail
           base="https://trcraic-png.github.io/Marc/erp"
+          check_page() {
+            url="$1"
+            expected="$2"
+            tmp=$(mktemp)
+            if ! curl -fsSL "$url" -o "$tmp"; then
+              rm -f "$tmp"
+              return 1
+            fi
+            grep -q "$expected" "$tmp"
+            rc=$?
+            rm -f "$tmp"
+            return $rc
+          }
           check_all() {
-            curl -fsSL "$base/" | grep -q "ObraControl ERP v11.9.3" &&
-            curl -fsSL "$base/residente.html" | grep -q "ObraControl | Residente" &&
-            curl -fsSL "$base/inversionista.html" | grep -q "ObraControl Inversionista" &&
-            curl -fsSL "$base/cliente.html" | grep -q "Portal de cliente"
+            check_page "$base/" "ObraControl ERP v11.9.3" &&
+            check_page "$base/residente.html" "ObraControl | Residente" &&
+            check_page "$base/inversionista.html" "ObraControl Inversionista" &&
+            check_page "$base/cliente.html" "Portal de cliente"
           }
           for i in {1..12}; do
             if check_all; then
