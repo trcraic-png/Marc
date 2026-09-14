@@ -1,0 +1,86 @@
+name: ObraControl ERP Automated QA
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "site/erp/**"
+      - ".github/workflows/erp-smoke.yml"
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-and-live-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Static integrity checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s site/erp/index.html
+          test -s site/erp/residente.html
+          test -s site/erp/inversionista.html
+          test -s site/erp/cliente.html
+
+          grep -q "ObraControl ERP v11.9.3" site/erp/index.html
+          grep -q "./residente.html" site/erp/index.html
+          grep -q "./inversionista.html" site/erp/index.html
+          grep -q "./cliente.html" site/erp/index.html
+
+          grep -q "sessionStorage" site/erp/residente.html
+          ! grep -q "localStorage" site/erp/residente.html
+          grep -q "x-resident-key" site/erp/residente.html
+          grep -q "history.replaceState" site/erp/residente.html
+
+          grep -q "sessionStorage" site/erp/inversionista.html
+          grep -q "x-investor-key" site/erp/inversionista.html
+          grep -q "history.replaceState" site/erp/inversionista.html
+
+          grep -q "sessionStorage" site/erp/cliente.html
+          grep -q "x-client-key" site/erp/cliente.html
+          grep -q "history.replaceState" site/erp/cliente.html
+
+          ! grep -Rqi "SUPABASE_SERVICE_ROLE_KEY" site/erp
+          ! grep -Rqi "service_role" site/erp
+
+      - name: Wait for published site
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://trcraic-png.github.io/Marc/erp"
+          for i in {1..12}; do
+            ok=1
+            curl -fsSL "$base/" | grep -q "ObraControl ERP v11.9.3" || ok=0
+            curl -fsSL "$base/residente.html" | grep -q "ObraControl | Residente" || ok=0
+            curl -fsSL "$base/inversionista.html" | grep -q "ObraControl Inversionista" || ok=0
+            curl -fsSL "$base/cliente.html" | grep -q "Portal de cliente" || ok=0
+            if [ "$ok" -eq 1 ]; then
+              echo "All four ERP portals are online."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "ERP live smoke test failed."
+          exit 1
+
+      - name: Supabase public API reachability
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://syhfjvhfpuvbawgexdun.supabase.co/functions/v1"
+          for fn in obra-admin-api obra-erp-api obra-resident-field-api obra-client-portal-api obra-investor-portal-api obra-resident-admin-api; do
+            code=$(curl -sS -o /tmp/resp -w "%{http_code}" -X OPTIONS "$base/$fn")
+            if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+              echo "$fn OPTIONS failed with HTTP $code"
+              cat /tmp/resp
+              exit 1
+            fi
+          done
+          echo "Supabase Edge APIs reachable."
