@@ -1,0 +1,33 @@
+{
+  "id": "CIM65Cad3DActivity",
+  "engine": "Autodesk.AutoCAD+26_0",
+  "description": "CIM65 CAD IA 3D parametric generator",
+  "appbundles": [
+    "<APS_CLIENT_ID>.CIM65CadBundle+prod"
+  ],
+  "commandLine": [
+    "$(engine.path)\\accoreconsole.exe /i \"$(args[inputFile].path)\" /al \"$(appbundles[CIM65CadBundle].path)\" /s $(settings[script].path) /suppressGraphics"
+  ],
+  "parameters": {
+    "inputFile": {
+      "verb": "get",
+      "required": true,
+      "localName": "seed.dxf"
+    },
+    "inputJson": {
+      "verb": "get",
+      "required": true,
+      "localName": "job.json"
+    },
+    "outputFile": {
+      "verb": "put",
+      "required": true,
+      "localName": "output.dwg"
+    }
+  },
+  "settings": {
+    "script": {
+      "value": "CIM65GENERATE\n"
+    }
+  }
+}
