@@ -151,36 +151,89 @@ async function cadApi(action,payload={}){
 async function loadAps(){
   $("#apsState").textContent="Backend seguro activo";
   $("#apsEngine").textContent="Autodesk.AutoCAD+26_0";
-  $("#apsActivity").textContent="Pendiente de credenciales APS";
+  $("#apsActivity").textContent="Modo script-first";
   $("#apsBadge").textContent="Backend CAD: conectado";
   $("#apsBadge").className="badge good";
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function apsStatusLabel(s){
+  const x=String(s||"").toLowerCase();
+  if(x==="pending") return "En cola";
+  if(x==="inprogress") return "AutoCAD modelando";
+  if(x==="success") return "DWG generado";
+  if(x==="failed") return "Falló";
+  if(x==="cancelled") return "Cancelado";
+  return s||"Procesando";
 }
 async function testAps(){
   $("#testApsBtn").disabled=true;$("#testApsBtn").textContent="Probando…";
   try{
     const s=await cadApi("status");
     $("#apsEngine").textContent=s.engine||"Autodesk.AutoCAD+26_0";
-    $("#apsActivity").textContent=s.activityConfigured?"Configurada":"No configurada";
+    $("#apsActivity").textContent=s.activityMode==="script-first"?"Script dinámico → DWG":"Preparada";
     if(!s.apsConfigured){
       $("#apsState").textContent="Backend OK · faltan credenciales Autodesk";
       toast("Backend CAD IA conectado. Falta cargar Client ID y Client Secret de Autodesk APS.");
       return;
     }
-    const t=await cadApi("test");
+    await cadApi("test");
+    const boot=await cadApi("bootstrap");
     $("#apsState").textContent="Autodesk APS conectado";
+    $("#apsActivity").textContent=boot.activity?.activityId||s.activityId||"Activity lista";
     $("#apsBadge").textContent="Autodesk: conectado";
     $("#apsBadge").className="badge good";
-    toast("Autodesk APS respondió correctamente.");
+    toast("Autodesk APS, bucket y Activity listos.");
   }catch(e){toast(e.message||String(e))}
   finally{$("#testApsBtn").disabled=false;$("#testApsBtn").textContent="Probar conexión Autodesk"}
 }
 async function makeDwg(){
+  const btn=$("#dwgBtn");
+  btn.disabled=true;
+  const original=btn.textContent;
   try{
+    btn.textContent="Preparando…";
     const s=await cadApi("status");
-    if(!s.apsConfigured){toast("Backend listo. Falta cargar las credenciales Autodesk APS.");return}
-    if(!s.activityConfigured){toast("Autodesk está configurado, pero falta crear la Activity/AppBundle que genere el DWG.");return}
-    toast("Conexión lista para enviar WorkItems. Falta definir almacenamiento de entrada/salida para el DWG.");
-  }catch(e){toast(e.message||String(e))}
+    if(!s.apsConfigured){
+      toast("El backend ya está listo. Falta cargar Client ID y Client Secret de Autodesk APS.");
+      return;
+    }
+    $("#jobStatus").textContent="Preparando Autodesk APS…";
+    await cadApi("bootstrap");
+    btn.textContent="Enviando…";
+    $("#jobStatus").textContent="Enviando modelo a AutoCAD 2027…";
+    const job=await cadApi("generate",{project:state.project});
+    const id=job.workitem?.id;
+    if(!id) throw new Error("Autodesk no devolvió un WorkItem ID.");
+    window.lastApsJob=job;
+    btn.textContent="AutoCAD…";
+    let final=null;
+    for(let i=0;i<90;i++){
+      await sleep(i===0?1500:4000);
+      const r=await cadApi("jobStatus",{id,bucketKey:job.bucketKey,outputKey:job.outputKey});
+      const status=String(r.status?.status||"").toLowerCase();
+      $("#jobStatus").textContent="Autodesk · "+apsStatusLabel(status)+" · "+id.slice(0,12);
+      if(status==="success"){final=r;break}
+      if(status==="failed"||status==="cancelled"){
+        const report=r.status?.reportUrl?" · reporte disponible":"";
+        throw new Error("El WorkItem terminó en estado "+status+report);
+      }
+    }
+    if(!final) throw new Error("El WorkItem sigue procesándose. Puedes volver a pulsar DWG para revisar/generar otro.");
+    if(!final.downloadUrl) throw new Error("DWG generado, pero no se pudo crear el enlace de descarga.");
+    btn.textContent="Descargando…";
+    const a=document.createElement("a");
+    a.href=final.downloadUrl;
+    a.download=job.outputKey||"CIM65_modelo.dwg";
+    a.rel="noopener";
+    document.body.appendChild(a);a.click();a.remove();
+    $("#jobStatus").textContent="DWG real generado por AutoCAD 2027.";
+    toast("DWG real generado. Se inició la descarga.");
+  }catch(e){
+    $("#jobStatus").textContent="Autodesk: "+(e.message||String(e));
+    toast(e.message||String(e));
+  }finally{
+    btn.disabled=false;btn.textContent=original;
+  }
 }
 function showView(id){$$(".view").forEach(v=>v.classList.toggle("active",v.id===id));$$(".navBtn").forEach(b=>b.classList.toggle("active",b.dataset.view===id))}
 $$(".navBtn").forEach(b=>b.onclick=()=>showView(b.dataset.view));
