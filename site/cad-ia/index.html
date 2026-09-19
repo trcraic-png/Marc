@@ -91,7 +91,7 @@
           <div class="panelHead"><div><span class="kicker">CUANTIFICACIÓN</span><h2>Resumen</h2></div></div>
           <div id="quantities" class="quantities"></div>
           <div class="exportGrid">
-            <button id="jsonBtn">JSON</button><button id="csvBtn">CSV</button><button id="dxfBtn">DXF demo</button><button id="scrBtn">AutoCAD .SCR</button><button id="dwgBtn">DWG</button><button id="printBtn">PDF / imprimir</button>
+            <button id="jsonBtn">JSON</button><button id="csvBtn">CSV</button><button id="dxfBtn">DXF demo</button><button id="scrBtn">AutoCAD .SCR</button><button id="dwgBtn">DWG real</button><button id="printBtn">PDF / imprimir</button>
           </div>
         </article>
       </div>
@@ -112,8 +112,7 @@
     <section id="integrations" class="view">
       <div class="grid cards3">
         <article class="panel integrationCard">
-          <div class="iconSquare">A</div><h2>Autodesk APS / AutoCAD Cloud</h2>
-          <p>Generación real de DWG mediante Automation API. Las credenciales viven únicamente en el servidor.</p>
+          <div class="iconSquare">A</div><h2>Autodesk APS / AutoCAD Cloud</h2>\n          <p><strong>Etapa 1:</strong> script dinámico → AutoCAD 2027 → DWG real. <strong>Etapa 2:</strong> AppBundle .NET 10 para sólidos 3D. Las credenciales Autodesk viven únicamente en el servidor.</p>
           <dl><div><dt>Estado</dt><dd id="apsState">Modo demo</dd></div><div><dt>Engine</dt><dd id="apsEngine">Autodesk.AutoCAD+26_0</dd></div><div><dt>Activity</dt><dd id="apsActivity">No configurada</dd></div></dl>
           <button id="testApsBtn" class="primary">Probar conexión Autodesk</button>
         </article>
@@ -133,7 +132,7 @@
         <ol>
           <li>Crear una aplicación Autodesk APS tipo servidor y obtener Client ID / Client Secret.</li>
           <li>Configurar <code>APS_CLIENT_ID</code>, <code>APS_CLIENT_SECRET</code> y <code>APS_ACTIVITY_ID</code> como variables de entorno del servidor.</li>
-          <li>Crear el AppBundle/Activity que reciba el esquema paramétrico o un script AutoCAD y produzca el DWG.</li>
+          <li>La Activity script-first ya está preparada por el backend. Al conectar APS se crea automáticamente.</li>\n          <li>El código fuente del AppBundle 3D está preparado en el repositorio para la segunda etapa.</li>
           <li>Usar “Probar conexión Autodesk” y verificar que el engine configurado esté disponible.</li>
           <li>Al generar DWG, el backend envía un WorkItem y recibe el resultado para visualizar/exportar.</li>
         </ol>
