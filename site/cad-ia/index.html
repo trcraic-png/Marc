@@ -112,8 +112,13 @@
     <section id="integrations" class="view">
       <div class="grid cards3">
         <article class="panel integrationCard">
-          <div class="iconSquare">A</div><h2>Autodesk APS / AutoCAD Cloud</h2>\n          <p><strong>Etapa 1:</strong> script dinámico → AutoCAD 2027 → DWG real. <strong>Etapa 2:</strong> AppBundle .NET 10 para sólidos 3D. Las credenciales Autodesk viven únicamente en el servidor.</p>
+          <div class="iconSquare">A</div><h2>Autodesk APS / AutoCAD Cloud</h2>
+          <p><strong>Etapa 1:</strong> script dinámico → AutoCAD 2027 → DWG real. <strong>Etapa 2:</strong> AppBundle .NET 10 para sólidos 3D. Las credenciales Autodesk viven únicamente en el servidor.</p>
           <dl><div><dt>Estado</dt><dd id="apsState">Modo demo</dd></div><div><dt>Engine</dt><dd id="apsEngine">Autodesk.AutoCAD+26_0</dd></div><div><dt>Activity</dt><dd id="apsActivity">No configurada</dd></div></dl>
+          <div class="connectLinks">
+            <a class="primary linkBtn" href="https://aps.autodesk.com/hubs/" target="_blank" rel="noopener">Abrir Autodesk Developer Hub</a>
+            <a class="ghost linkBtn" href="https://supabase.com/dashboard/project/hyreskelwwyezbzdovnq/functions/secrets" target="_blank" rel="noopener">Abrir Secrets de Supabase</a>
+          </div>
           <button id="testApsBtn" class="primary">Probar conexión Autodesk</button>
         </article>
         <article class="panel integrationCard">
@@ -131,8 +136,10 @@
         <h2>Activación Autodesk APS</h2>
         <ol>
           <li>Crear una aplicación Autodesk APS tipo servidor y obtener Client ID / Client Secret.</li>
-          <li>Configurar <code>APS_CLIENT_ID</code>, <code>APS_CLIENT_SECRET</code> y <code>APS_ACTIVITY_ID</code> como variables de entorno del servidor.</li>
-          <li>La Activity script-first ya está preparada por el backend. Al conectar APS se crea automáticamente.</li>\n          <li>El código fuente del AppBundle 3D está preparado en el repositorio para la segunda etapa.</li>
+          <li>Crear la aplicación como <strong>Server-to-Server</strong> y copiar su Client ID y Client Secret.</li>
+          <li>En Supabase → Edge Functions → Secrets guardar exactamente <code>APS_CLIENT_ID</code> y <code>APS_CLIENT_SECRET</code>. No hace falta <code>APS_ACTIVITY_ID</code> en esta versión.</li>
+          <li>La Activity script-first ya está preparada por el backend. Al conectar APS se crea automáticamente.</li>
+          <li>El código fuente del AppBundle 3D está preparado en el repositorio para la segunda etapa.</li>
           <li>Usar “Probar conexión Autodesk” y verificar que el engine configurado esté disponible.</li>
           <li>Al generar DWG, el backend envía un WorkItem y recibe el resultado para visualizar/exportar.</li>
         </ol>
