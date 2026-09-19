@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ApplicationPackage
+  SchemaVersion="1.0"
+  AutodeskProduct="AutoCAD"
+  Name="CIM65 CAD IA"
+  Description="Generador parametrico CIM65 para Autodesk APS Automation"
+  AppVersion="1.0.0"
+  ProductCode="{A4D4E71C-49BB-4B3E-969F-31D5F1776500}"
+  UpgradeCode="{9B46FC6B-0D73-481D-A294-3EA5E36C6500}">
+  <CompanyDetails
+    Name="Corporativo Inmobiliario Mexico 65"
+    Url="https://www.cim65.com" />
+  <Components>
+    <RuntimeRequirements
+      OS="Win64"
+      Platform="AutoCAD"
+      SeriesMin="R26.0"
+      SeriesMax="R26.0" />
+    <ComponentEntry
+      AppName="CIM65CadPlugin"
+      ModuleName="./Contents/CIM65CadPlugin.dll"
+      AppDescription="CIM65 CAD IA Automation Plugin"
+      LoadOnCommandInvocation="True"
+      LoadOnAutoCADStartup="True">
+      <Commands GroupName="CIM65">
+        <Command Global="CIM65GENERATE" Local="CIM65GENERATE" />
+      </Commands>
+    </ComponentEntry>
+  </Components>
+</ApplicationPackage>
