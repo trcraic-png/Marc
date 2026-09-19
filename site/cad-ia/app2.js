@@ -113,13 +113,75 @@ function scr(){
   out.push("_.ZOOM","_E");
   return out.join("\n")+"\n";
 }
-async function loadAps(){
-  $("#apsState").textContent="Modo demo · backend APS pendiente";
-  $("#apsEngine").textContent="Autodesk.AutoCAD+26_0";
-  $("#apsActivity").textContent="No configurada";
+const CAD_BACKEND_URL="https://hyreskelwwyezbzdovnq.supabase.co/functions/v1/cim65-cad-aps";
+const CAD_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5cmVza2Vsd3d5ZXpiemRvdm5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyNzM1MDksImV4cCI6MjEwNDg0OTUwOX0.Ne3QFw93-HAJqf3OkBwB9BEsVu4fJa7icxvYnKbtuug";
+function cadAccessKey(){
+  let key=sessionStorage.getItem("cim65_cad_key")||"";
+  if(!key){
+    key=(window.prompt("Ingresa la clave de acceso de CIM65 CAD IA")||"").trim().toUpperCase();
+    if(key) sessionStorage.setItem("cim65_cad_key",key);
+  }
+  return key;
 }
-async function testAps(){toast("La interfaz ya funciona. Para conectar Autodesk APS falta agregar el backend seguro con Client ID, Secret y Activity.");}
-async function makeDwg(){toast("DWG real pendiente de backend Autodesk APS. Puedes exportar DXF demo o AutoCAD .SCR desde ahora.");}
+async function cadApi(action,payload={}){
+  const key=cadAccessKey();
+  if(!key) throw new Error("Se requiere la clave CAD IA.");
+  const r=await fetch(CAD_BACKEND_URL,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+CAD_ANON_KEY,
+      "apikey":CAD_ANON_KEY,
+      "x-cad-key":key
+    },
+    body:JSON.stringify({action,...payload})
+  });
+  const j=await r.json().catch(()=>({ok:false,error:"INVALID_BACKEND_RESPONSE"}));
+  if(r.status===403){
+    sessionStorage.removeItem("cim65_cad_key");
+    throw new Error("Clave CAD IA incorrecta.");
+  }
+  if(!r.ok||!j.ok){
+    if(j.error==="APS_NOT_CONFIGURED") throw new Error("Backend activo. Faltan Client ID y Client Secret de Autodesk APS.");
+    if(j.error==="APS_ACTIVITY_NOT_CONFIGURED") throw new Error("Autodesk ya responde, pero falta crear/configurar la Activity de AutoCAD.");
+    throw new Error(j.detail||j.error||("Backend "+r.status));
+  }
+  return j;
+}
+async function loadAps(){
+  $("#apsState").textContent="Backend seguro activo";
+  $("#apsEngine").textContent="Autodesk.AutoCAD+26_0";
+  $("#apsActivity").textContent="Pendiente de credenciales APS";
+  $("#apsBadge").textContent="Backend CAD: conectado";
+  $("#apsBadge").className="badge good";
+}
+async function testAps(){
+  $("#testApsBtn").disabled=true;$("#testApsBtn").textContent="Probando…";
+  try{
+    const s=await cadApi("status");
+    $("#apsEngine").textContent=s.engine||"Autodesk.AutoCAD+26_0";
+    $("#apsActivity").textContent=s.activityConfigured?"Configurada":"No configurada";
+    if(!s.apsConfigured){
+      $("#apsState").textContent="Backend OK · faltan credenciales Autodesk";
+      toast("Backend CAD IA conectado. Falta cargar Client ID y Client Secret de Autodesk APS.");
+      return;
+    }
+    const t=await cadApi("test");
+    $("#apsState").textContent="Autodesk APS conectado";
+    $("#apsBadge").textContent="Autodesk: conectado";
+    $("#apsBadge").className="badge good";
+    toast("Autodesk APS respondió correctamente.");
+  }catch(e){toast(e.message||String(e))}
+  finally{$("#testApsBtn").disabled=false;$("#testApsBtn").textContent="Probar conexión Autodesk"}
+}
+async function makeDwg(){
+  try{
+    const s=await cadApi("status");
+    if(!s.apsConfigured){toast("Backend listo. Falta cargar las credenciales Autodesk APS.");return}
+    if(!s.activityConfigured){toast("Autodesk está configurado, pero falta crear la Activity/AppBundle que genere el DWG.");return}
+    toast("Conexión lista para enviar WorkItems. Falta definir almacenamiento de entrada/salida para el DWG.");
+  }catch(e){toast(e.message||String(e))}
+}
 function showView(id){$$(".view").forEach(v=>v.classList.toggle("active",v.id===id));$$(".navBtn").forEach(b=>b.classList.toggle("active",b.dataset.view===id))}
 $$(".navBtn").forEach(b=>b.onclick=()=>showView(b.dataset.view));
 $$("[data-prompt]").forEach(b=>b.onclick=()=>{$("#prompt").value=b.dataset.prompt});
