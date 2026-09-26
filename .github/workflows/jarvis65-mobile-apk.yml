@@ -7,27 +7,51 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Unpack JARVIS Mobile source
-        run: unzip -q jarvis65-mobile-v0.3.zip
-      - uses: actions/setup-java@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
-      - uses: android-actions/setup-android@v3
-      - name: Install Android SDK 35
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
-      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Prepare Android SDK 35
+        shell: bash
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --list_installed
+
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.9"
+
+      - name: Verify and unpack JARVIS Mobile source
+        shell: bash
+        run: |
+          sha256sum Jarvis65Mobile_v0.3_NativeAssistant.zip
+          unzip -t Jarvis65Mobile_v0.3_NativeAssistant.zip
+          unzip -q Jarvis65Mobile_v0.3_NativeAssistant.zip
+
       - name: Build debug APK
         working-directory: Jarvis65Mobile
         run: gradle :app:assembleDebug --stacktrace
-      - uses: actions/upload-artifact@v4
+
+      - name: Verify APK
+        shell: bash
+        run: |
+          test -f Jarvis65Mobile/app/build/outputs/apk/debug/app-debug.apk
+          ls -lh Jarvis65Mobile/app/build/outputs/apk/debug/app-debug.apk
+          sha256sum Jarvis65Mobile/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
         with:
           name: Jarvis65-Mobile-v0.3-debug-apk
           path: Jarvis65Mobile/app/build/outputs/apk/debug/app-debug.apk
