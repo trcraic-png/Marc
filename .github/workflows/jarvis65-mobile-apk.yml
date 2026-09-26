@@ -13,6 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Rebuild and verify source ZIP
+        shell: bash
+        run: |
+          cat source.part00 source.part01 source.part02a source.part02b source.part02c source.part02d source.part03 > source.b64
+          test "$(wc -c < source.b64)" -eq 51348
+          base64 -d source.b64 > source.zip
+          echo "f4c01f9ebecc921130a6b99e338dbd915bbb884410ef87d83e0bda2f8135a3e4  source.zip" | sha256sum -c -
+          unzip -t source.zip
+          unzip -q source.zip
+
       - name: Set up Java 17
         uses: actions/setup-java@v5
         with:
@@ -22,22 +32,13 @@ jobs:
       - name: Prepare Android SDK 35
         shell: bash
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --list_installed
 
       - name: Set up Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.9"
-
-      - name: Verify and unpack JARVIS Mobile source
-        shell: bash
-        run: |
-          sha256sum Jarvis65Mobile_v0.3_NativeAssistant.zip
-          unzip -t Jarvis65Mobile_v0.3_NativeAssistant.zip
-          unzip -q Jarvis65Mobile_v0.3_NativeAssistant.zip
 
       - name: Build debug APK
         working-directory: Jarvis65Mobile
